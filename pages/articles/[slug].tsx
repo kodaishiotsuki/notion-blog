@@ -1,5 +1,6 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import ArticleMeta from "../../components/ArticleMeta";
+import Block from "../../components/Block";
 import Layout from "../../components/Layout";
 import { ArticleProps, Params } from "../../types/types";
 import { fetchBlocksByPageId, fetchPages } from "../../utils/notion";
@@ -48,7 +49,11 @@ const Article: NextPage<ArticleProps> = ({ page, blocks }) => {
         </div>
 
         {/* article */}
-        {/* <div className="my-12">article {page}</div> */}
+        <div className="my-12">
+          {blocks.map((block, index) => (
+            <Block block={block} key={index} />
+          ))}
+        </div>
       </article>
     </Layout>
   );
