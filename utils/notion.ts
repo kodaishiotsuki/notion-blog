@@ -57,9 +57,27 @@ export const fetchPages = async ({
   });
 };
 
-//
+// export const fetchBlocksByPageId = async (pageId: string) => {
+//   return await notion.blocks.children.list({
+//     block_id: pageId,
+//   });
+// };
+
+//表示するブロックを取得(100件以上)
 export const fetchBlocksByPageId = async (pageId: string) => {
-  return await notion.blocks.children.list({
-    block_id: pageId,
-  });
+  const data = [];
+  let cursor = undefined;
+
+  while (true) {
+    //1回目
+    const { results, next_cursor }: any = await notion.blocks.children.list({
+      block_id: pageId,
+      start_cursor: cursor,
+    });
+    //2回目
+    data.push(...results); //resultsの中身だけを展開
+    if (!next_cursor) break;
+    cursor = next_cursor;
+  }
+  return { results: data };
 };
