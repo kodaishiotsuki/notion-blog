@@ -4,9 +4,8 @@ import Layout from "../components/Layout";
 import { siteConfig } from "../site.config";
 import { IndexProps } from "../types/types";
 import { fetchPages } from "../utils/notion";
-import { sampleCards } from "../utils/sample";
 
-//SSG
+//SSG+ISR
 export const getStaticProps: GetStaticProps = async () => {
   const { results } = await fetchPages({}); //fetchPagesをreturnで返してる
   return {

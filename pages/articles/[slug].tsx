@@ -1,22 +1,34 @@
-import { GetStaticProps, NextPage } from "next";
+import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import ArticleMeta from "../../components/ArticleMeta";
 import Layout from "../../components/Layout";
 import { ArticleProps, Params } from "../../types/types";
 import { fetchBlocksByPageId, fetchPages } from "../../utils/notion";
-import { sampleCards } from "../../utils/sample";
+import { getText } from "../../utils/property";
 
+//getStaticPaths
+export const getStaticPaths: GetStaticPaths = async () => {
+  const { results } = await fetchPages({});
+  const paths = results.map((page: any) => {
+    return {
+      params: {
+        slug: getText(page.properties.slug.rich_text),
+      },
+    };
+  });
+  return {
+    paths: paths,
+    fallback: "blocking",
+  };
+};
 //リクエスト毎にレンダリング（再生成）
 export const getStaticProps: GetStaticProps = async (ctx) => {
   const { slug } = ctx.params as Params;
-  console.log(slug);
   const { results } = await fetchPages({ slug: slug });
-  console.log(results);
   const page = results[0];
   const pageId = page.id;
   const { results: blocks } = await fetchBlocksByPageId(pageId);
   return {
     props: {
-      // slug: slug,
       page: page, //プロパティ
       blocks: blocks, //記事の中身
     },
@@ -24,7 +36,10 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
   };
 };
 
-const Article: NextPage<ArticleProps> = ({ page }) => {
+const Article: NextPage<ArticleProps> = ({ page, blocks }) => {
+  console.log("page", page);
+  console.log("blocks", blocks);
+  return <></>;
   return (
     <Layout>
       <article className="w-full">
