@@ -3,7 +3,13 @@ import { Client } from "@notionhq/client";
 const notion = new Client({ auth: process.env.NOTION_KEY as string });
 const DATABASE_ID = process.env.NOTION_DATABASE_ID as string;
 
-export const fetchPages = async ({ slug }: { slug?: string }) => {
+export const fetchPages = async ({
+  slug,
+  tag,
+}: {
+  slug?: string;
+  tag?: string;
+}) => {
   const and: any = [
     {
       property: "isPublic",
@@ -27,6 +33,15 @@ export const fetchPages = async ({ slug }: { slug?: string }) => {
       },
     });
   }
+  //tagがあればandに追加
+  if (tag) {
+    and.push({
+      property: "tags",
+      multi_select: {
+        contains: tag,
+      },
+    });
+  }
 
   return await notion.databases.query({
     database_id: DATABASE_ID,
@@ -41,7 +56,6 @@ export const fetchPages = async ({ slug }: { slug?: string }) => {
     ],
   });
 };
-
 
 //
 export const fetchBlocksByPageId = async (pageId: string) => {
