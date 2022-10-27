@@ -8,7 +8,7 @@ import { sampleCards } from "../utils/sample";
 
 //SSG
 export const getStaticProps: GetStaticProps = async () => {
-  const { results } = await fetchPages(); //fetchPagesをreturnで返してる
+  const { results } = await fetchPages({}); //fetchPagesをreturnで返してる
   return {
     props: {
       pages: results ? results : [],
