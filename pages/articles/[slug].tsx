@@ -28,7 +28,7 @@ const Article: NextPage<ArticleProps> = ({ page }) => {
         </div>
 
         {/* article */}
-        <div className="my-12">article {page.content}</div>
+        <div className="my-12">article {page}</div>
       </article>
     </Layout>
   );

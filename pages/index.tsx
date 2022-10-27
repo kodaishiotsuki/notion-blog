@@ -18,7 +18,6 @@ export const getStaticProps: GetStaticProps = async () => {
 };
 
 const Home: NextPage<IndexProps> = ({ pages }) => {
-  console.log(pages);
   return (
     <Layout>
       <div className="pt-12">
