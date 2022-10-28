@@ -3,9 +3,7 @@ import { ParsedUrlQuery } from "querystring";
 import { ReactNode } from "react";
 
 //props
-export type LayoutProps = {
-  children: ReactNode;
-};
+export type LayoutProps = { children: ReactNode };
 
 //サンプル
 export type PageProps = {
@@ -72,10 +70,3 @@ export type PageType = {
   cover: FileType | null;
   properties: PropertyType;
 };
-
-// export type BlockType = {
-//   type: string;
-//   heading_1: { rich_text: RichTextType[] };
-//   heading_2: { rich_text: RichTextType[] };
-//   paragraph: { rich_text: RichTextType[] };
-// };
