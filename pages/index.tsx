@@ -1,4 +1,4 @@
-import type { GetStaticProps, NextPage } from "next";
+import type { GetServerSideProps, GetStaticProps, NextPage } from "next";
 import Card from "../components/Card";
 import Layout from "../components/Layout";
 import { siteConfig } from "../site.config";
@@ -6,13 +6,24 @@ import { IndexProps } from "../types/types";
 import { fetchPages } from "../utils/notion";
 
 //SSG+ISR
-export const getStaticProps: GetStaticProps = async () => {
-  const { results } = await fetchPages({}); //fetchPagesをreturnで返してる
+// export const getStaticProps: GetStaticProps = async () => {
+//   const { results } = await fetchPages({}); //fetchPagesをreturnで返してる
+//   return {
+//     props: {
+//       pages: results ? results : [],
+//     },
+//     revalidate: 10, //ISR
+//   };
+// };
+
+
+//SSR
+export const getServerSideProps: GetServerSideProps = async () => {
+  const { results } = await fetchPages({});
   return {
     props: {
       pages: results ? results : [],
     },
-    revalidate: 10, //ISR
   };
 };
 

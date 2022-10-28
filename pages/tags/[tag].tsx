@@ -1,4 +1,9 @@
-import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import type {
+  GetServerSideProps,
+  GetStaticPaths,
+  GetStaticProps,
+  NextPage,
+} from "next";
 import Card from "../../components/Card";
 import Layout from "../../components/Layout";
 import { siteConfig } from "../../site.config";
@@ -6,40 +11,52 @@ import { Params, TagProps } from "../../types/types";
 import { fetchPages } from "../../utils/notion";
 import { getMultiSelect } from "../../utils/property";
 
-//getStaticPaths
-export const getStaticPaths: GetStaticPaths = async () => {
-  const { results }: { results: Record<string, any>[] } = await fetchPages({});
-  //resultsからtagを取得
-  const pathSet: Set<string> = new Set(); //重複防止
-  for (const page of results) {
-    for (const tag of getMultiSelect(page.properties.tags.multi_select)) {
-      pathSet.add(tag);
-    }
-  }
-  //配列に戻してmapでtag取得
-  const paths = Array.from(pathSet).map((tag) => {
-    return {
-      params: {
-        tag: tag,
-      },
-    };
-  });
-  return {
-    paths: paths,
-    fallback: "blocking",
-  };
-};
+// //getStaticPaths
+// export const getStaticPaths: GetStaticPaths = async () => {
+//   const { results }: { results: Record<string, any>[] } = await fetchPages({});
+//   //resultsからtagを取得
+//   const pathSet: Set<string> = new Set(); //重複防止
+//   for (const page of results) {
+//     for (const tag of getMultiSelect(page.properties.tags.multi_select)) {
+//       pathSet.add(tag);
+//     }
+//   }
+//   //配列に戻してmapでtag取得
+//   const paths = Array.from(pathSet).map((tag) => {
+//     return {
+//       params: {
+//         tag: tag,
+//       },
+//     };
+//   });
+//   return {
+//     paths: paths,
+//     fallback: "blocking",
+//   };
+// };
 
-//SSG+ISR
-export const getStaticProps: GetStaticProps = async (ctx) => {
+// //SSG+ISR
+// export const getStaticProps: GetStaticProps = async (ctx) => {
+//   const { tag } = ctx.params as Params;
+//   const { results } = await fetchPages({ tag: tag }); //fetchPagesをreturnで返してる
+//   return {
+//     props: {
+//       pages: results ? results : [],
+//       tag: tag,
+//     },
+//     revalidate: 10, //ISR
+//   };
+// };
+
+//SSR
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { tag } = ctx.params as Params;
-  const { results } = await fetchPages({ tag: tag }); //fetchPagesをreturnで返してる
+  const { results } = await fetchPages({ tag: tag });
   return {
     props: {
       pages: results ? results : [],
       tag: tag,
     },
-    revalidate: 10, //ISR
   };
 };
 
